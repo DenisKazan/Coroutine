@@ -58,8 +58,8 @@ internal object NetworkModule {
     @Provides
     @Singleton
     @JvmStatic
-    fun serverUri(app: MultiDexApplication): Uri { // TODO inject storage
-        return Uri.parse("https://bankok.akbars.ru/")
+    fun serverUri(): Uri {
+        return Uri.parse("https://api.stackexchange.com/2.2/")
     }
 
     @Provides
