@@ -12,13 +12,10 @@ class ComponentInjector(app: MultiDexApplication) {
         val contextProvider = AndroidContextComponent
             .Initializer
             .init(app)
-        val networkProvider = NetworkComponent
-            .Initializer
-            .init(contextProvider)
         appComponent = DaggerAppComponent.builder()
             .appModule(AppModule())
+            .networkModule(NetworkModule())
             .contextProvider(contextProvider)
-            .networkProvider(networkProvider)
             .build()
     }
 

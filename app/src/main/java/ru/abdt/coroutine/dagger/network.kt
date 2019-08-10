@@ -44,10 +44,12 @@ interface NetworkComponent : NetworkProvider {
 }
 
 @Module
-internal object NetworkModule {
+class NetworkModule {
 
-    private const val RELEASE_TIMEOUT_MIN = 2L
-    private const val DEBUG_TIMEOUT_MIN = 3L
+    companion object {
+        private const val RELEASE_TIMEOUT_MIN = 2L
+        private const val DEBUG_TIMEOUT_MIN = 3L
+    }
 
     private val timeOut: Long = if (!BuildConfig.DEBUG) {
         TimeUnit.MINUTES.toMillis(RELEASE_TIMEOUT_MIN)
@@ -57,20 +59,17 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    @JvmStatic
     fun serverUri(): Uri {
         return Uri.parse("https://api.stackexchange.com/2.2/")
     }
 
     @Provides
     @Singleton
-    @JvmStatic
     fun provideGson(): Gson =
         GsonUtils.create()
 
     @Provides
     @Singleton
-    @JvmStatic
     fun provideOkHttpClient(app: MultiDexApplication): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor { message -> Timber.v(message) }
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -85,15 +84,12 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    @JvmStatic
     fun providesRetrofit(serverUri: Uri,
                          okHttpClient: OkHttpClient,
-                         gson: Gson): Retrofit {
-        val builder = Retrofit.Builder()
+                         gson: Gson): Retrofit = Retrofit.Builder()
             .baseUrl(serverUri.toString())
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        return builder.build()
-    }
+            .build()
 }
