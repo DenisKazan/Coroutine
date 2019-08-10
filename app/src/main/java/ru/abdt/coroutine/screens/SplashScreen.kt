@@ -16,6 +16,7 @@ class SplashScreen : AppCompatActivity() {
 
     private fun openListActivity() {
         startActivity(QuestionsActivity.getInstance(this))
+        finish()
     }
 
     companion object {
