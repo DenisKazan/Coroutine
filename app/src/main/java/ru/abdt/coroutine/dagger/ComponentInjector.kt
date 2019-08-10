@@ -1,6 +1,8 @@
 package ru.abdt.coroutine.dagger
 
+import android.content.Context
 import androidx.multidex.MultiDexApplication
+import ru.abdt.coroutine.app.CoroutineApp
 
 class ComponentInjector(app: MultiDexApplication) {
 
@@ -21,4 +23,8 @@ class ComponentInjector(app: MultiDexApplication) {
     }
 
     fun getAppComponent(): AppComponent = appComponent
+
+    companion object {
+        fun get(context: Context) = (context.applicationContext as CoroutineApp).componentInjector
+    }
 }

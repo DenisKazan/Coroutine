@@ -6,7 +6,7 @@ import timber.log.Timber
 
 class CoroutineApp: MultiDexApplication() {
 
-    private val componentInjector: ComponentInjector by lazy {
+    val componentInjector: ComponentInjector by lazy {
         ComponentInjector(this)
     }
 
