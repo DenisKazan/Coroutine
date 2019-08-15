@@ -1,6 +1,8 @@
 package ru.abdt.coroutine.screens.questions
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 import ru.abdt.coroutine.screens.questions.QueryConstants.ASC
 import ru.abdt.coroutine.screens.questions.QueryConstants.PAGE_SIZE
 import ru.abdt.coroutine.screens.questions.QueryConstants.SITE
@@ -24,6 +26,7 @@ class QuestionsResponseModel(
     val items: MutableList<QuestionResponseModel>? = null
 )
 
+@Parcelize
 class QuestionResponseModel(
     @SerializedName("tags")
     val tags: MutableList<String>? = null,
@@ -39,8 +42,9 @@ class QuestionResponseModel(
     val score: Int? = null,
     @SerializedName("title")
     val title: String? = null
-)
+): Parcelable
 
+@Parcelize
 class Ownwer(
     @SerializedName("reputation")
     val reputation: Int? = null,
@@ -50,5 +54,5 @@ class Ownwer(
     val displayName: String? = null,
     @SerializedName("link")
     val link: String? = null
-)
+): Parcelable
 

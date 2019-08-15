@@ -7,10 +7,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import ru.abdt.coroutine.screens.questions.view.QuestionViewModel
+import ru.abdt.coroutine.utils.BottomSheetHelper
 import ru.abdt.coroutine.utils.CustomViewModel
 import timber.log.Timber
 
-class QuestionsViewModel(private val repository: IQuestionsRepository): CustomViewModel(), CoroutineScope by MainScope() {
+class QuestionsViewModel(private val repository: IQuestionsRepository,
+                         private val bottomSheetHelper: BottomSheetHelper): CustomViewModel(), CoroutineScope by MainScope() {
 
     val onListAdapterItemsRecieved by lazy { MutableLiveData<QuestionViewModel>() }
 
@@ -33,17 +35,29 @@ class QuestionsViewModel(private val repository: IQuestionsRepository): CustomVi
 
     private fun mappingToViewModel(question: QuestionResponseModel): QuestionViewModel {
         return QuestionViewModel(question.title ?: "", question.owner?.displayName ?: "",
-            question.viewCount ?: "", question.answerCount ?: 0) { onQuestionClick() }
+            question.viewCount ?: "", question.answerCount ?: 0) { onQuestionClick(question) }
     }
 
-    private fun onQuestionClick() {
+    private fun onQuestionClick(question: QuestionResponseModel) {
+        jobs += launch {
+            val result = runCatching { bottomSheetHelper.showBottomSheet(question) }
+            result.fold(onSuccess = {
+                checkChoice(it)
+            }, onFailure = {
+                Timber.e(it)
+            })
+        }
+    }
+
+    private fun checkChoice(it: Boolean) {
 
     }
 
-    class Factory(private val repository: IQuestionsRepository) : ViewModelProvider.NewInstanceFactory() {
+    class Factory(private val repository: IQuestionsRepository,
+                  private val bottomSheetHelper: BottomSheetHelper) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return QuestionsViewModel(repository) as T
+            return QuestionsViewModel(repository, bottomSheetHelper) as T
         }
 
     }

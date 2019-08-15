@@ -6,6 +6,7 @@ import retrofit2.Retrofit
 import ru.abdt.coroutine.dagger.AppComponent
 import ru.abdt.coroutine.dagger.appComponent
 import ru.abdt.coroutine.screens.questions.*
+import ru.abdt.coroutine.utils.BottomSheetHelper
 import javax.inject.Scope
 
 @Scope
@@ -50,7 +51,13 @@ abstract class QuestionsModule {
         @QuestionsScope
         @JvmStatic
         @Provides
-        fun provideViewModelFactory(repository: IQuestionsRepository) = QuestionsViewModel.Factory(repository)
+        fun provideBottomHelper(appCompatActivity: AppCompatActivity) = BottomSheetHelper(appCompatActivity)
+
+        @QuestionsScope
+        @JvmStatic
+        @Provides
+        fun provideViewModelFactory(repository: IQuestionsRepository,
+                                    bottomSheetHelper: BottomSheetHelper) = QuestionsViewModel.Factory(repository, bottomSheetHelper)
 
         @Provides
         @JvmStatic
